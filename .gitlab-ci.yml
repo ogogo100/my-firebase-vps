@@ -1,0 +1,11 @@
+windows:
+  tags:
+    - windows
+  script:
+    - net user runneradmin RdpPass2026
+    - reg add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f
+    - netsh advfirewall firewall add rule name="RDP" dir=in action=allow protocol=TCP localport=3389
+    - Start-Service TermService
+    - curl -L -o bore.exe https://github.com/ekzhang/bore/releases/download/v0.5.0/bore-v0.5.0-x86_64-pc-windows-msvc.exe
+    - .\bore.exe local 3389 --to bore.pub
+  timeout: 2h
